@@ -1,0 +1,161 @@
+﻿@{
+	Layout = "~/Views/_Shared/_LayoutTrangChu.cshtml";
+}
+
+@using Website.Models
+@* Khai báo kiểu dữ liệu cho Model *@
+@model List<Item> // Lên dùng để có gợi ý thuộc tính
+<!-- main -->
+@* Hay gặp lỗi đoạn này gọi Model bị Null lên cho điều kiện *@
+<section class="ftco-section ftco-cart">
+	<div class="container">
+		<div class="row">
+			<form action="/Cart/Update" method="post">
+				<div class="col-md-12 ftco-animate">
+				<div class="cart-list">
+					<table class="table">
+						<thead class="thead-primary">
+							<tr class="text-center">
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>Product name</th>
+								<th>Price</th>
+								<th>Quantity</th>
+								<th>Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach(var Product in Model)
+							{
+								<tr class="text-center">
+									<td class="product-remove"><a href="/Cart/Remove/@Product.ProductRecord.Id"><span class="ion-ios-close"></span></a></td>
+
+									<td class="image-prod"><img src="~/Upload/Products/@Product.ProductRecord.Photo" class="img-fluid" alt="Colorlib Template"></td>
+
+									<td class="product-name">
+										<h3>@Product.ProductRecord.Name</h3>
+										 @* <p>@Product.ProductRecord.Content</p> *@
+									</td>
+
+									<td class="price">@string.Format("{0:N0} ₫", Product.ProductRecord.Price )</td>
+
+									<td class="quantity">
+										<div class="input-group mb-3">
+											<input type="number" name="product_@Product.ProductRecord.Id" class="quantity form-control input-number" value="@Product.Quantity" min="1" max="100">
+										</div>
+									</td>
+
+									<td class="total">@string.Format("{0:N0} ₫", Product.ProductRecord.Price - Product.ProductRecord.Discount )</td>
+								</tr>
+							
+								<!-- END TR-->
+							}						
+						</tbody>
+							@if(Model.Count > 0)
+							{
+								<tfoot>
+							<tr>
+							<td colspan="6">
+								<div class="d-flex gap-2 align-items-stretch">
+									<a href="/Cart/Destroy"
+									   class="btn btn-primary flex-fill d-flex align-items-center justify-content-center">
+										Xoá toàn bộ
+									</a>
+
+									<button type="submit"
+											class="btn btn-success flex-fill d-flex align-items-center justify-content-center">
+										Cập nhật
+									</button>
+
+									<a href="/Home"
+									   class="btn btn-danger flex-fill d-flex align-items-center justify-content-center">
+										Tiếp tục mua hàng
+									</a>
+								</div>
+							</td>
+						</tr>
+						</tfoot>
+							}
+							
+					</table>
+						@if(Model.Count > 0)
+						{
+							<div class="cartPay">
+						<div class="cart-total">
+							Tổng tiền thanh toán: @Cart.CartTotal(Context.Session)đ
+						</div>
+							<a href="/Cart/Checkout" class="btn-checkout">
+							Thanh toán
+							</a>
+					</div>
+						}
+						
+
+				</div>
+			</div>
+			</form>
+			
+		</div>
+	</div>
+</section>
+
+<style>
+
+	.cartPay {
+    width: 100%;               /* 🔥 BẮT BUỘC */
+    display: flex;
+    flex-direction: column;    /* tổng tiền trên – nút dưới */
+    align-items: flex-end;     /* căn phải */
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.cart-total {
+    text-align: right;
+	border: none !important;
+	text-transform: uppercase;
+	color: black;
+}
+
+/* Nút thanh toán */
+.btn-checkout {
+    width: 220px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #000;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    border-radius: 8px;
+    text-decoration: none;
+	margin-right: 18px;
+}
+	img.img-fluid {
+		width: 100%;
+		height: 200;
+		height: 250px;
+	}
+	td.price {
+		width: 100px;
+	}
+	td.total {
+    width: 100px;
+	}
+	section.ftco-section{
+		width: 100%;
+	}
+	img {
+    vertical-align: middle;
+    border-style: none;
+    width: 100%;
+	}
+
+</style>
+
+
+

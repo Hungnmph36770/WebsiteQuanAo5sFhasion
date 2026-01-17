@@ -1,0 +1,113 @@
+﻿@model Website.Models.Products
+
+@{
+	Layout = "~/Views/_Shared/_LayoutTrangTrong.cshtml";
+}
+
+@using Website.Models
+
+@functions {
+    public MyDbContext db = new MyDbContext();
+    //lấy tên danh mục sản phẩm
+    public string GetCategoryName(int _ProductId)
+    {
+        var record = (from category in db.Categories join category_product in db.categoriesProducts on category.Id equals category_product.CategoryId join product in db.Products on category_product.ProductId equals product.Id where product.Id == _ProductId select category).FirstOrDefault();
+        return record != null ? record.Name : "";
+    }
+    //đánh giá số sao
+    public string GetStar(int _ProductId, int _Star)
+    {
+        List<Rating> records = db.Ratings.Where(item => item.ProductId == _ProductId && item.Star == _Star).ToList();
+        return records.Count().ToString();
+    }
+}
+<div class="row">
+    <div class="col-lg-6 mb-5 ftco-animate">
+        <a  class="image-popup"><img src="~/Upload/Products/@Model.Photo" class="img-fluid" alt="Colorlib Template"></a>
+    </div>
+    <div class="col-lg-6 product-details pl-md-5 ftco-animate">
+        <h3>@Model.Name</h3>
+        <div class="rating d-flex">
+            <p class="text-left mr-4">
+                <a href="#"><span class="ion-ios-star-outline">@GetStar(Model.Id, 1) vote</span></a>
+                <a href="#"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline">@GetStar(Model.Id, 2) vote</span></a>
+                <a href="#"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline">@GetStar(Model.Id, 3) vote</span></a>
+                <a href="#"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline">@GetStar(Model.Id, 4) vote</span></a>
+                <a href="#"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline"><span class="ion-ios-star-outline">@GetStar(Model.Id, 5) vote</span></a>
+            </p>
+
+            @{
+                int star1 = int.Parse(GetStar(Model.Id, 1));
+                int star2 = int.Parse(GetStar(Model.Id, 2));
+                int star3 = int.Parse(GetStar(Model.Id, 3));
+                int star4 = int.Parse(GetStar(Model.Id, 4));
+                int star5 = int.Parse(GetStar(Model.Id, 5));
+
+                int totalVote = star1 + star2 + star3 + star4 + star5;
+            }
+            <p> Vote: @totalVote</p>
+            @* <p class="text-left mr-4">
+                <a href="#" class="mr-2" style="color: #000;">100 <span style="color: #bbb;">Rating</span></a>
+            </p>
+            <p class="text-left">
+                <a href="#" class="mr-2" style="color: #000;">500 <span style="color: #bbb;">Sold</span></a>
+            </p> *@
+        </div>
+        <p class="price"><span class="mr-2 price-dc">@string.Format("{0:N0} ₫", @Model.Price)</span><span class="price-sale">@string.Format("{0:N0} ₫", @Model.Price - @Model.Discount)</span></p>
+        <p>
+            A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. Text should turn around and return to its own, safe country. But nothing the copy said could convince her and so it didn’t take long until.
+        </p>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="form-group d-flex">
+                    <div class="select-wrap">
+                        <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                        <select name="" id="" class="form-control">
+                            <option value="">Small</option>
+                            <option value="">Medium</option>
+                            <option value="">Large</option>
+                            <option value="">Extra Large</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100"></div>
+
+        </div>
+        <p><a href="/Cart/Buy/@Model.Id" class="btn btn-black py-3 px-5">Add to Cart</a></p>
+        <p><a href="/Products/tk/@Model.Id" class="btn btn-black py-3 px-5">Mua Ngay</a></p>
+    </div>
+</div>
+@* <div class="middle" style="margin-top:20px;">
+    <!-- chi tiet -->
+    @Html.Raw(Model.Description)
+    @Html.Raw(Model.Content)
+    <!-- chi tiet -->
+</div> *@
+<style>
+    span.mr-2.price-dc {
+        text-decoration: line-through;
+    }
+
+    p.text-left.mr-4 {
+        display: flex;
+        flex-direction: column;
+            justify-content: center;
+    }
+
+    span.ion-ios-star-outline {
+        margin-right: 8px;
+        /* font-size: 16px; */
+        color: #f5c518;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+</style>
+
+
+
+
+
+  
+

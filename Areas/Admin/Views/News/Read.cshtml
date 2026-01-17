@@ -1,0 +1,64 @@
+﻿@using Website.Areas.Admin.Controllers
+@using Website.Models;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core
+@model IPagedList<News>
+@{
+    // Để trả về homePage Admin trong Admin/Layout
+    Layout = "~/Areas/Admin/Views/_Shared/_Layout.cshtml";
+}
+
+@* muốn load ckeditor thì phải khai bảo dòng dưới *@
+<script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+@* Select 2 *@
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<div class="col-md-12">
+    <div style="margin-bottom:5px;">
+        <a href="/Admin/News/Create" class="btn btn-primary">Add News</a>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">List News</div>
+        <div class="panel-body">
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th style="width:50px;">Image</th>
+                    <th style="width:100px;">Name</th>
+                    <th style="width: 100px;">Hot news</th>
+                    <th style="width:100px;">Action</th>
+                </tr>
+                @foreach (var row in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (row.Photo != "") // Nếu Photo là null
+                            {
+                                // Dẫn đến Upload trong wwwroot/Product/ Lấy Photo trong Model
+                                <img src="~/Upload/News/@row.Photo" style="width:100px">
+                            }
+                        </td>
+                        <td>@row.Name</td> 
+                        <td style="text-align: center;">
+                            @if (row.Hot == 1)
+                            {
+                                <text>x</text>
+                            }
+                        </td>
+                        <td style="text-align:center;">
+                            <a href="/Admin/News/Update/@row.Id">Edit</a>&nbsp;
+                            <a href="/Admin/News/Delete/@row.Id" onclick="return window.confirm('Are you sure?');">Delete</a>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+            <style type="text/css">
+                .pagination {
+                    padding: 0px;
+                    margin: 0px;
+                }
+            </style>
+            @Html.PagedListPager(Model, page => Url.Action("Read", new { page = page, a = 1, b = 2 }))
+        </div>
+    </div>
+</div>

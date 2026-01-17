@@ -1,0 +1,104 @@
+﻿@{
+    Layout = "~/Views/_Shared/_LayoutTrangTrong.cshtml";
+}
+
+@using Website.Models
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<Products>
+
+@functions {
+    // Lấy bên ProductCategory
+    public MyDbContext db = new MyDbContext();
+    // Ở dưới bỏ đi
+}
+<div class="special-collection">
+    <div class="tabs-container">
+        <div class="row" style="margin-top:10px;">
+            <div class="head-tabs head-tab1 col-lg-12">
+                <h2>
+                    Tìm kiếm theo giá, Giá từ @string.Format("{0:N0} ₫", ViewBag.fromPrice) đến @string.Format("{0:N0} ₫", ViewBag.toPrice)
+                </h2>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">Tìm theo mức giá</div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            Giá từ
+                            <input type="number" id="fromPrice" class="form-control" />
+                        </li>
+                        <li class="list-group-item">
+                            Đến
+                            <input type="number" id="toPrice" class="form-control" />
+                        </li>
+                        <li class="list-group-item text-center">
+                            <input type="button" class="btn btn-warning w-100"
+                                   value="Tìm mức giá"
+                                   onclick="location.href='/Search/SearchPrice?fromPrice='+fromPrice.value+'&toPrice='+toPrice.value;" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="tabs-content row">
+                <div id="content-tabb1" class="content-tab content-tab-proindex" style="">
+                    <div class="clearfix">
+
+                        @foreach (var row in Model)
+                        {
+                            <!-- box product -->
+                            <div class="col-xs-6 col-md-3 col-sm-6 hieght">
+                                <div class="product-grid" id="product-1168979" overflow: hidden;">
+                                    <div class="image"> <a href="/Products/Detail/@row.Id"><img src="~/Upload/Products/@row.Photo" title="@row.Name." alt="row.Name" class="img-responsive"></a> </div>
+                                    <div class="info">
+                                        <h3 class="name"><a href="/Products/Detail/@row.Id">@row.Name</a></h3>
+                                        <p class="price-box"> <span class="special-price"> <span class="price product-price" style="text-decoration:line-through;"> @string.Format("{0:N0} ₫", row.Price)</span> ₫ </span> </p>
+                                        <p class="price-box"> <span class="special-price"> <span class="price product-price"> @string.Format("{0:N0} ₫", row.Price - row.Discount)  </span>₫ </span> </p>
+                                        <p class="price-box">
+                                            <a href="/Products/Rate/@row.Id?star=1"><img src="~/Frontend/assets/frontend/images/star.jpg"></a>
+                                            <a href="/Products/Rate/@row.Id?star=2"><img src="~/Frontend/assets/frontend/images/star.jpg"></a>
+                                            <a href="/Products/Rate/@row.Id?star=3"><img src="~/Frontend/assets/frontend/images/star.jpg"></a> <a href="/Products/Rate/@row.Id?star=4"><img src="~/Frontend/assets/frontend/images/star.jpg"></a>
+                                            <a href="/Products/Rate/@row.Id?star=5"><img src="~/Frontend/assets/frontend/images/star.jpg"></a>
+                                        </p>
+                                        <div class="action-btn">
+                                            <form>
+                                                <a href="/Cart/Buy/@row.Id" class="button">Add to Cart</a>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end box product -->
+                        }
+
+                        <!-- paging -->
+                        <div style="clear: both;"></div>
+                        <div style="margin-top: -50px;" class="&#x70;&#x61;&#x67;&#x69;&#x6E;&#x61;&#x74;&#x69;&#x6F;&#x6E;&#x2D;&#x63;&#x6F;&#x6E;&#x74;&#x61;&#x69;&#x6E;&#x65;&#x72;">
+                            @Html.PagedListPager(
+                            Model,
+                            page => Url.Action("SearchPrice", new { page = page, fromPrice = ViewBag.fromPrice, toPrice = ViewBag.toPrice }))
+                        </div>
+                        <!-- end paging -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+<style>
+    .hieght {
+        height: 400px;
+    }
+    img.img-responsive {
+        height: 200px;
+    }
+    .product-grid {
+        height:100%;
+    }
+</style>

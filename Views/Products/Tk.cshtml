@@ -1,0 +1,47 @@
+﻿@model Website.Models.Products
+
+@{
+	Layout = "~/Views/_Shared/_LayoutTrangTrong.cshtml";
+}
+@functions {
+	public MyDbContext db = new MyDbContext(); 
+    public string GetStar(int _ProductId, int _Star)
+    {
+        List<Rating> records = db.Ratings.Where(item => item.ProductId == _ProductId && item.Star == _Star).ToList();
+        return records.Count().ToString();
+    }
+
+}
+@using Website.Models
+<div class="container d-flex justify-content-center">
+	<img src="~/images/AnhTk.jpg" />
+</div>
+<div class="container mt-5">
+    <h3 class="text-center mb-4">Xác nhận mua hàng</h3>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+            <img src="~/Upload/Products/@Model.Photo"
+                 class="img-fluid mb-3"
+                 alt="@Model.Name" />
+
+            <h4>@Model.Name</h4>
+
+            <p>
+                Giá:
+                <strong style="color:red">
+                    @string.Format("{0:N0} ₫", Model.Price - Model.Discount)
+                </strong>
+            </p>
+
+            <a href="/Cart/Buy/@Model.Id" class="btn btn-success px-4">
+                Xác nhận mua
+            </a>
+        </div>
+    </div>
+</div>
+<style>
+	img{
+		width:400px;
+	}
+</style>
